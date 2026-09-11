@@ -22,4 +22,15 @@ readonly class TransactionDTO
             currency: isset($data['currency']) ? strtoupper(trim((string) $data['currency'])) : null,
         );
     }
+
+    public function toArray(): array
+    {
+        return [
+            'transaction_id' => $this->transactionId,
+            'account_number' => $this->accountNumber,
+            'transaction_date' => $this->transactionDate,
+            'amount' => $this->amount,
+            'currency' => $this->currency,
+        ];
+    }
 }
