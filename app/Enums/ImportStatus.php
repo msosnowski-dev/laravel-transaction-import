@@ -6,7 +6,7 @@ enum ImportStatus: string
 {
     case PENDING = 'pending';
     case PROCESSING = 'processing';
-    case SUCCESS = 'succes';
+    case SUCCESS = 'success';
     case PARTIAL = 'partial';
     case FAILED = 'failed';
 
