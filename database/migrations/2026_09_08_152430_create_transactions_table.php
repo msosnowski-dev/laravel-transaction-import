@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('import_id')->constrained('imports')->cascadeOnDelete();
             $table->string('transaction_id');
             $table->string('account_number')->index();
             $table->date('transaction_date')->index();
