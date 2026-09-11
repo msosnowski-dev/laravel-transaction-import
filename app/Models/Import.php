@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Import extends Model
 {
@@ -19,11 +20,11 @@ class Import extends Model
 
     public function importLogs(): HasMany
     {
-        return $this->hasMany(ImportLogs::class);
+        return $this->hasMany(ImportLog::class);
     }
 
     public function transactions(): HasMany
     {
-        return $this->hasMany(Transactions::class);
+        return $this->hasMany(Transaction::class);
     }
 }
