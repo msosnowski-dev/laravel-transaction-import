@@ -1,0 +1,16 @@
+<transactions>
+  <transaction>
+    <transaction_id>xml-tx-bad-1</transaction_id>
+    <account_number>PL61109010140000071219812874INVALID</account_number>
+    <transaction_date>2025-10-14</transaction_date>
+    <amount>-150</amount>
+    <currency>PLN</currency>
+  </transaction>
+  <transaction>
+    <transaction_id></transaction_id>
+    <account_number>PL61109010140000071219812874</account_number>
+    <transaction_date>bad-date</transaction_date>
+    <amount>200</amount>
+    <currency>P</currency>
+  </transaction>
+</transactions>

@@ -1,0 +1,16 @@
+<transactions>
+  <transaction>
+    <transaction_id>xml-tx-0001</transaction_id>
+    <account_number>PL61109010140000071219812874</account_number>
+    <transaction_date>2025-10-14</transaction_date>
+    <amount>150000</amount>
+    <currency>PLN</currency>
+  </transaction>
+  <transaction>
+    <transaction_id>xml-tx-0002</transaction_id>
+    <account_number>DE89370400440532013000</account_number>
+    <transaction_date>2025-10-13</transaction_date>
+    <amount>20050</amount>
+    <currency>EUR</currency>
+  </transaction>
+</transactions>

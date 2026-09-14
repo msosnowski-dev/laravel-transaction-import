@@ -1,0 +1,16 @@
+[
+  {
+    "transaction_id": "json-tx-0001",
+    "account_number": "PL61109010140000071219812874",
+    "transaction_date": "2025-10-14",
+    "amount": 150000,
+    "currency": "PLN"
+  },
+  {
+    "transaction_id": "json-tx-0002",
+    "account_number": "DE89370400440532013000",
+    "transaction_date": "2025-10-13",
+    "amount": 20050,
+    "currency": "EUR"
+  }
+]
