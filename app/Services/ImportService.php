@@ -11,6 +11,7 @@ use App\Services\Parsers\FileParserFactory;
 use App\Services\Validation\TransactionValidator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Brick\Math\BigDecimal;
 use Throwable;
 
 class ImportService
@@ -83,8 +84,14 @@ class ImportService
 
                     if($validation->isValid) {
                         $successCount++;
+
+                        $amount = config('import.amount_in_minor_units')
+                        ? (string) \Brick\Math\BigDecimal::of($dto->amount)->dividedBy(100, 2)
+                        : $dto->amount;
+
                         $validBuffer[] = [
                             ...$validation->dto->toArray(),
+                            'amount'     => $amount,
                             'import_id' => $import->id,
                             'created_at' => now(),
                             'updated_at' => now(),
