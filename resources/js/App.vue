@@ -70,6 +70,7 @@
             :is-open="isLogsModalOpen"
             :import-data="activeImport"
             :logs="activeImportLogs"
+            :transactions="activeImportTransactions"
             :is-loading="isLoadingLogs"
             @close="closeLogsModal"
         />
@@ -94,6 +95,7 @@ const isLoadingList = ref(false);
 const isLogsModalOpen = ref(false);
 const activeImport = ref(null);
 const activeImportLogs = ref([]);
+const activeImportTransactions = ref([]);
 const isLoadingLogs = ref(false);
 
 const toast = ref({
@@ -155,18 +157,14 @@ async function openLogsModal(importItem) {
     activeImport.value = importItem;
     isLogsModalOpen.value = true;
     isLoadingLogs.value = true;
-
     try {
-        // If logs were already included in the payload
-        if (importItem.logs && Array.isArray(importItem.logs)) {
-            activeImportLogs.value = importItem.logs;
-        } else {
-            const details = await fetchImportDetails(importItem.id);
-            activeImportLogs.value = details.data?.logs || [];
-        }
+        const details = await fetchImportDetails(importItem.id);
+        activeImportLogs.value = details.data?.logs || [];
+        activeImportTransactions.value = details.data?.transactions || [];
     } catch (err) {
-        showToast(err.message || 'Błąd podczas pobierania logów.', 'error');
+        showToast(err.message, 'error');
         activeImportLogs.value = [];
+        activeImportTransactions.value = [];
     } finally {
         isLoadingLogs.value = false;
     }
@@ -176,6 +174,7 @@ function closeLogsModal() {
     isLogsModalOpen.value = false;
     activeImport.value = null;
     activeImportLogs.value = [];
+    activeImportTransactions.value = [];
 }
 
 onMounted(() => {

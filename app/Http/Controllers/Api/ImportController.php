@@ -27,6 +27,10 @@ class ImportController extends Controller
 
     public function show(int $id): ImportResource
     {
-        return new ImportResource(Import::with('importLogs')->findOrFail($id));
+        $relations = ['importLogs'];
+        if (config('import.json.show_transactions')) {
+            $relations[] = 'transactions';
+        }
+        return new ImportResource(Import::with($relations)->findOrFail($id));
     }
 }

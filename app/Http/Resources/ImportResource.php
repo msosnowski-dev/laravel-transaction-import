@@ -18,6 +18,7 @@ class ImportResource extends JsonResource
             'status' => $this->status,
             'created_at' => $this->created_at?->toIso8601String(),
             'logs' => ImportLogResource::collection($this->whenLoaded('importLogs')),
+            'transactions' => TransactionResource::collection($this->whenLoaded('transactions')), // <-- DODAJ
         ];
     }
 }

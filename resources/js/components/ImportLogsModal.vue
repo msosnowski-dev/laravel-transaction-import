@@ -32,27 +32,32 @@
                     </svg>
                 </button>
             </div>
-
-            <!-- Search / Filter bar -->
-            <div class="px-6 py-3 bg-gray-50 border-b border-gray-200 flex items-center gap-3">
-                <div class="relative flex-1">
-                    <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                    <input
-                        v-model="searchQuery"
-                        type="text"
-                        placeholder="Search by transaction_id or error message..."
-                        class="w-full pl-9 pr-3 py-1.5 bg-white border border-gray-300 rounded-lg text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                    />
-                </div>
-                <span class="text-xs text-gray-500 whitespace-nowrap">
-                    Showing {{ filteredLogs.length }} of {{ logs.length }}
-                </span>
+            <!-- Tabs -->
+            <div v-if="showTransactions" class="px-6 border-b border-gray-200 flex gap-1 bg-white">
+                <button
+                    v-if="logs.length > 0"
+                    @click="activeTab = 'logs'"
+                    :class="activeTab === 'logs'
+                        ? 'border-b-2 border-indigo-600 text-indigo-600 font-semibold'
+                        : 'text-gray-500 hover:text-gray-700'"
+                    class="px-3 py-3 text-xs transition"
+                >
+                    Error logs ({{ logs.length }})
+                </button>
+                <button
+                    v-if="transactions.length > 0"
+                    @click="activeTab = 'transactions'"
+                    :class="activeTab === 'transactions'
+                        ? 'border-b-2 border-indigo-600 text-indigo-600 font-semibold'
+                        : 'text-gray-500 hover:text-gray-700'"
+                    class="px-3 py-3 text-xs transition"
+                >
+                    Valid transactions ({{ transactions.length }})
+                </button>
             </div>
 
             <!-- Logs Content -->
-            <div class="flex-1 overflow-y-auto p-6 space-y-3">
+            <div v-if="activeTab === 'logs'" class="flex-1 overflow-y-auto p-6 space-y-3">
                 <!-- Loading state -->
                 <div v-if="isLoading" class="py-12 text-center text-gray-500">
                     <svg class="w-7 h-7 animate-spin mx-auto text-indigo-600 mb-2" fill="none" viewBox="0 0 24 24">
@@ -105,6 +110,23 @@
                 </div>
             </div>
 
+            <div v-else-if="activeTab === 'transactions'" class="flex-1 overflow-y-auto p-6 space-y-2.5">
+                <div
+                    v-for="tx in transactions"
+                    :key="tx.id"
+                    class="p-4 bg-gray-50 border border-gray-200 rounded-xl text-xs"
+                >
+                    <div class="flex items-center justify-between gap-4">
+                        <span class="font-mono text-indigo-700 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded">{{ tx.transaction_id }}</span>
+                        <span class="text-gray-400 font-mono">{{ tx.transaction_date }}</span>
+                    </div>
+                    <div class="flex items-center gap-4 mt-2 text-gray-600">
+                        <span>IBAN: <strong class="text-gray-900">{{ tx.account_number }}</strong></span>
+                        <span>Kwota: <strong class="text-gray-900">{{ tx.amount }} {{ tx.currency }}</strong></span>
+                    </div>
+                </div>
+            </div>
+
             <!-- Modal Footer -->
             <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-end">
                 <button
@@ -119,7 +141,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 
 const props = defineProps({
     isOpen: {
@@ -134,6 +156,10 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
+    transactions: {
+        type: Array,
+        default: () => [],
+    },
     isLoading: {
         type: Boolean,
         default: false,
@@ -142,7 +168,21 @@ const props = defineProps({
 
 const emit = defineEmits(['close']);
 
+const showTransactions = window.AppConfig?.showTransactions ?? false;
+
 const searchQuery = ref('');
+const activeTab = ref('logs');
+
+watch(
+    () => [props.isOpen, props.logs.length, props.transactions.length],
+    () => {
+        if (props.logs.length === 0 && props.transactions.length > 0) {
+            activeTab.value = 'transactions';
+        } else {
+            activeTab.value = 'logs';
+        }
+    }
+);
 
 const filteredLogs = computed(() => {
     if (!searchQuery.value.trim()) {
@@ -157,6 +197,7 @@ const filteredLogs = computed(() => {
 
 function close() {
     searchQuery.value = '';
+    activeTab.value = 'logs';
     emit('close');
 }
 
